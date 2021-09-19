@@ -10,13 +10,13 @@ import org.occurrent.cloudevents.OccurrentExtensionGetter;
 import org.occurrent.eventstore.api.LongConditionEvaluator;
 import org.occurrent.eventstore.api.WriteCondition;
 import org.occurrent.eventstore.api.WriteConditionNotFulfilledException;
+import org.occurrent.eventstore.api.WriteResult;
 import org.occurrent.eventstore.api.reactor.EventStore;
 import org.occurrent.eventstore.api.reactor.EventStoreOperations;
 import org.occurrent.eventstore.api.reactor.EventStoreQueries;
 import org.occurrent.eventstore.api.reactor.EventStream;
 import org.occurrent.eventstore.sql.common.SqlEventStoreConfig;
 import org.occurrent.filter.Filter;
-import org.reactivestreams.Publisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.Parameter;
@@ -62,12 +62,13 @@ class SpringReactorSqlEventStore implements EventStore, EventStoreOperations, Ev
   }
 
   @Override
-  public Mono<Void> write(String streamId, WriteCondition writeCondition, Flux<CloudEvent> events) {
+  public Mono<WriteResult> write(String streamId, WriteCondition writeCondition, Flux<CloudEvent> events) {
     final Flux<Void> eventsToWrite = currentStreamVersionFulfillsCondition(streamId, writeCondition)
         .flatMapMany(SpringReactorSqlEventStore::streamVersionIncrements)
         .zipWith(events)
         .flatMap(insertCloudEventTo(streamId));
-    return eventsToWrite.as(transactionalOperator::transactional).then()
+    return eventsToWrite.as(transactionalOperator::transactional)
+        .map()
         .onErrorMap(DataIntegrityViolationException.class, DataIntegrityViolationToDuplicateCloudEventExceptionTranslator::translateToDuplicateCloudEventException);
   }
 

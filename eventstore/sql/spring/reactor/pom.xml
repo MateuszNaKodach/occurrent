@@ -19,7 +19,7 @@
     <parent>
         <artifactId>eventstore-sql-spring</artifactId>
         <groupId>org.occurrent</groupId>
-        <version>0.7.3-SNAPSHOT</version>
+        <version>0.10.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
@@ -29,12 +29,12 @@
         <dependency>
             <groupId>org.occurrent</groupId>
             <artifactId>eventstore-api-reactor</artifactId>
-            <version>0.7.3-SNAPSHOT</version>
+            <version>0.10.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.occurrent</groupId>
             <artifactId>eventstore-sql-common</artifactId>
-            <version>0.7.3-SNAPSHOT</version>
+            <version>0.10.1-SNAPSHOT</version>
         </dependency>
         <!--<dependency>
             <groupId>org.springframework.data</groupId>
@@ -101,7 +101,7 @@
         <dependency>
             <groupId>org.occurrent</groupId>
             <artifactId>test-support</artifactId>
-            <version>0.7.3-SNAPSHOT</version>
+            <version>0.10.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
